@@ -4,24 +4,21 @@ import { formatDate } from "../lib/utils";
 import api from "../lib/axios";
 import toast from "react-hot-toast";
 
-const Notecard = ({ note, setNotes }) => {
-  const handleDelete = async (e, id) => {
+const Notecard = ({ note, setNotes }) => {  const handleDelete = async (e, id) => {
     e.preventDefault(); // Prevent the default action of the button
+    e.stopPropagation(); // Prevent event bubbling to the Link
 
-    if (!window.confirm("Are you sure you want to delete this note?")) return;
-
-    try {
+    if (!window.confirm("Are you sure you want to delete this note?")) return;    try {
       await api.delete(`/notes/${id}`);
-      setNotes((prev) => prev.filter((note) => note._id !== id));
+      setNotes((prev) => prev.filter((note) => note.id !== id));
       toast.success("Note deleted successfully");
     } catch (error) {
       toast.error("Error deleting note");
       console.error("Error deleting note:", error);
     }
-  };
-  return (
+  };  return (
     <Link
-      to={`/notes/${note._id}`}
+      to={`/notes/${note.id}`}
       className="card bg-base-100 hover:shadow-lg transition-all duration-200 border-t-4 border-solid border-[#00ff9d]"
     >
       <div className="card-body">
@@ -32,10 +29,9 @@ const Notecard = ({ note, setNotes }) => {
             {formatDate(new Date(note.createdAt))}
           </span>
           <div className="flex items-center gap-1">
-            <PenSquareIcon className="size-4" />
-            <button
+            <PenSquareIcon className="size-4" />            <button
               className="btn btn-ghost btn-xs text-error"
-              onClick={(e) => handleDelete(e, note._id)}
+              onClick={(e) => handleDelete(e, note.id)}
             >
               <Trash2Icon className="size-4" />
             </button>
