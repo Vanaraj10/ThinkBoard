@@ -56,7 +56,6 @@ const NoteDetailPage = () => {
 
     fetchNote();
   }, [id]);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -65,10 +64,25 @@ const NoteDetailPage = () => {
     );
   }
 
+  if (!note) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-error mb-2">Note Not Found</h2>
+          <p className="text-base-content/60 mb-4">The note you're looking for doesn't exist.</p>
+          <Link to="/" className="btn btn-primary">
+            <ArrowLeftIcon className="h-5 w-5" />
+            Back to Notes
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-base-200">
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <Link to="/" className="btn btn-ghost">
               <ArrowLeftIcon className="h-5 w-5" />
@@ -88,12 +102,11 @@ const NoteDetailPage = () => {
               <div className="form-control mb-4">
                 <label className="label">
                   <span className="label-text">Title</span>
-                </label>
-                <input
+                </label>                <input
                   type="text"
                   placeholder="Note title"
                   className="input input-bordered"
-                  value={note.title}
+                  value={note?.title || ''}
                   onChange={(e) => setNote({ ...note, title: e.target.value })}
                 />
               </div>
@@ -101,11 +114,10 @@ const NoteDetailPage = () => {
               <div className="form-control mb-4">
                 <label className="label">
                   <span className="label-text">Content</span>
-                </label>
-                <textarea
+                </label>                <textarea
                   placeholder="Write your note here..."
                   className="textarea textarea-bordered h-32"
-                  value={note.content}
+                  value={note?.content || ''}
                   onChange={(e) =>
                     setNote({ ...note, content: e.target.value })
                   }
